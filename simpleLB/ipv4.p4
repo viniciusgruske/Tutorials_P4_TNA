@@ -84,7 +84,7 @@ control SwitchIngressDeparser(
             hdr.ipv4.dst_addr});}
         pkt.emit(hdr);
     }
-}ss
+}
 
 Register<bit<32>, _>(1) lb_counter;
 
@@ -114,6 +114,7 @@ control SwitchIngress(
                 value = 0;
             }else{
                 value = 1;
+            }
 	    rv = value;
         }
     };
