@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 import random
-import socket
-import sys
 
-from scapy.all import IP, TCP, Ether, get_if_hwaddr, get_if_list, sendp
+from scapy.all import IP, TCP, Ether, get_if_hwaddr, sendp
 
 def main():
     pkt =  Ether(src=get_if_hwaddr("enp132s0f0np0"), dst='ff:ff:ff:ff:ff:ff')
