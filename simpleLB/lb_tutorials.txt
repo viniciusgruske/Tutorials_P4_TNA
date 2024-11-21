@@ -3,9 +3,3 @@ entry = table1.add_with_ipv4_forward("10.0.1.1", 132, "94:6d:ae:5c:87:72")
 
 entry = table1.add_with_ipv4_forward("10.0.1.2", 164 , "94:6d:ae:5c:87:42")
 
-
-
-
-table2 = bfrt.ipv4.pipe.SwitchIngress.def_lb
-entry = table2.add_with_action_lb("10.0.1.100", 1, 164 , "94:6d:ae:5c:87:42")
-entry = table2.add_with_action_lb("10.0.1.100", 0, 172,  "94:6d:ae:5c:87:43")
