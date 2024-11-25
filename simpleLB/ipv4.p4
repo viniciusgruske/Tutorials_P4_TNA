@@ -156,7 +156,7 @@ control SwitchIngress(
         }
 
 	    /* TODO: Instantiate the register action */  
-        ig_md.output_lb = check_counter.execute(0)
+        ig_md.output_lb = check_counter.execute(0);
 
         /* TODO: Apply the table */
         def_lb.apply();
