@@ -21,6 +21,9 @@
 
 
 /*TODO: define the necesssary metadata*/
+struct metadata_t {
+    bit<32> output_lb;
+}
 
 // ---------------------------------------------------------------------------
 // Ingress parser
@@ -85,6 +88,7 @@ control SwitchIngressDeparser(
 }
 
 /*TODO: register definition */
+Register<bit<32>, _>(1) lb_counter;
 
 control SwitchIngress(
         inout header_t hdr,
@@ -104,8 +108,17 @@ control SwitchIngress(
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
 
-
     /*TODO: create register action*/
+    RegisterAction<bit<32>, _, bit<32>>(lb_counter) check_counter = {
+        void apply(inout bit<32> value, out bit<32> rv) {
+            if (value == 1) {
+                value = 0;
+            } else {
+                value = 1;
+            }
+        rv = value;      
+        }
+    };
 
     table ipv4_lpm {
         key = {
@@ -119,8 +132,22 @@ control SwitchIngress(
     }
 
     /* TODO: Define the action LB */
+    action action_lb(PortId_t port, mac_addr_t dst_mac) {
+        ig_intr_tm_md.ucast_egress_port = port
+        hdr.ethernet.dst_addr = dst_mac
+    }
 
     /* TODO: Define the table to match the LB parameters */
+    table def_lb {
+        key = {
+            hdr.ipv4.dst_addr: exact;
+            ig_md.output_lb: exact;
+        }
+        actions = {
+            action_lb;
+        }
+        size = 2
+    }
 
     apply {
 
@@ -128,9 +155,12 @@ control SwitchIngress(
             ipv4_lpm.apply();
         }
 
-	/* TODO: Instantiate the register action */  
+	    /* TODO: Instantiate the register action */  
+        ig_md.output_lb = check_counter.execute(0)
+
         /* TODO: Apply the table */
-        
+        def_lb.apply();
+
         ig_intr_tm_md.bypass_egress = 1w1;
     }
 }
