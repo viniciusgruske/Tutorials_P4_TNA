@@ -133,8 +133,8 @@ control SwitchIngress(
 
     /* TODO: Define the action LB */
     action action_lb(PortId_t port, mac_addr_t dst_mac) {
-        ig_intr_tm_md.ucast_egress_port = port
-        hdr.ethernet.dst_addr = dst_mac
+        ig_intr_tm_md.ucast_egress_port = port;
+        hdr.ethernet.dst_addr = dst_mac;
     }
 
     /* TODO: Define the table to match the LB parameters */
